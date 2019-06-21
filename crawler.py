@@ -20,16 +20,18 @@ def get_lectures_XMU(url="http://chem.xmu.edu.cn/eventlist.asp"):
     """
     context = crawler(url)
     p_lec_title = re.compile("<a   title=\'(.*?)\'")
+    p_lec_url_id = re.compile("showevent.asp\?id=(\d+)")
     p_lecturer = re.compile("报告人：(.*?)<")
     p_lec_time = re.compile("时间：(.*?)<")
     p_lec_loc =  re.compile("地点：(.*?)<")
 
     lec_titles = p_lec_title.findall(context)
+    lec_url_ids = p_lec_url_id.findall(context)
     lecturers = p_lecturer.findall(context)
     lec_times = p_lec_time.findall(context)
     lec_locs = p_lec_loc.findall(context)
 
-    if not (len(lec_titles) == len(lecturers) == len(lec_times) == len(lec_locs)):
+    if not (len(lec_titles) == len(lec_url_ids) == len(lecturers) == len(lec_times) == len(lec_locs)):
         raise ReError('Captured lectures does not match in dimension')
     
     lectures = set()
@@ -39,7 +41,7 @@ def get_lectures_XMU(url="http://chem.xmu.edu.cn/eventlist.asp"):
         lecture['lecturer'] = lecturers[i]
         lecture['time'] = lec_times[i]
         lecture['loc'] = lec_locs[i]
-
+        lecture['url'] = 'http://chem.xmu.edu.cn/showevent.asp?id='+str(lec_url_ids[i])
         lectures.add(json.dumps(lecture, sort_keys=True, ensure_ascii=False))
     
     return lectures
