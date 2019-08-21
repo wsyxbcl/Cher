@@ -6,6 +6,7 @@ import re
 class CrawlerError(Exception):
     pass
 
+
 class ReError(CrawlerError):
     pass
 
@@ -46,11 +47,33 @@ def get_lectures_XMU(url="http://chem.xmu.edu.cn/eventlist.asp"):
     
     return lectures
 
+def save_lectures(lectures, path):
+    """
+    input: set of lectures, file&directory
+    output: json file
+    """
+    lectures_output = []
+    for lecture in list(lectures):
+        lectures_output.append(json.loads(lecture))
+    with open(path, 'w') as fp:
+        json.dump(lectures_output, fp, sort_keys=True, ensure_ascii=False, indent=2)
+
+def load_lectures(path):
+    """
+    load lectures from local josn file
+    """
+    with open(path, 'r') as fp:
+        lectures_input = json.load(fp)
+    lectures_local = set()
+    for lecture in lectures_input:
+        lectures_local.add(json.dumps(lecture, sort_keys=True, ensure_ascii=False))
+    return lectures_local
+    
+
+
 if __name__ == '__main__':
     lectures = get_lectures_XMU()
-    print(lectures)
-    #TODO Saving & Updating & Feed new lecture
-
-
-
-
+    # print(lectures)
+    #TODO Feed new lecture
+    save_lectures(lectures, './data/lectures.json')
+    lectures_local = load_lectures('./data/lectures.json')
