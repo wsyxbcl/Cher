@@ -72,8 +72,13 @@ def load_lectures(path):
 
 
 if __name__ == '__main__':
+    lectures_local = load_lectures('./data/lectures.json')
     lectures = get_lectures_XMU()
     # print(lectures)
     #TODO Feed new lecture
     save_lectures(lectures, './data/lectures.json')
-    lectures_local = load_lectures('./data/lectures.json')
+    lectures_new = lectures.difference(lectures_local)
+    if lectures_new:
+        print(lectures_new)
+    else:
+        print("Lectures up to date.")
