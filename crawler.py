@@ -1,4 +1,5 @@
 import json
+import os
 import requests
 import re
 
@@ -52,6 +53,8 @@ def save_lectures(lectures, path):
     input: set of lectures, file&directory
     output: json file
     """
+    if not os.path.exists(os.path.dirname(path)):
+        os.makedirs(os.path.dirname(path))
     lectures_output = []
     for lecture in list(lectures):
         lectures_output.append(json.loads(lecture))
@@ -72,7 +75,10 @@ def load_lectures(path):
 
 
 if __name__ == '__main__':
-    lectures_local = load_lectures('./data/lectures.json')
+    try:
+        lectures_local = load_lectures('./data/lectures.json')
+    except FileNotFoundError:
+        lectures_local = set()
     lectures = get_lectures_XMU()
     # print(lectures)
     #TODO Feed new lecture
