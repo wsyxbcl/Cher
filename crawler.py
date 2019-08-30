@@ -2,7 +2,7 @@ import json
 import os
 import requests
 import re
-
+from datetime import datetime
 
 class CrawlerError(Exception):
     pass
@@ -58,8 +58,10 @@ def save_lectures(lectures, path):
     lectures_output = []
     for lecture in list(lectures):
         lectures_output.append(json.loads(lecture))
+    lectures_output_sorted = sorted(lectures_output, reverse=True, 
+                                    key=lambda x: datetime.strptime(x['time'], '%Y-%m-%d %H:%M'))
     with open(path, 'w') as fp:
-        json.dump(lectures_output, fp, sort_keys=True, ensure_ascii=False, indent=2)
+        json.dump(lectures_output_sorted, fp, sort_keys=True, ensure_ascii=False, indent=2)
 
 def load_lectures(path):
     """
