@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import logging
 import configparser
+import json
 
+from telegram import ParseMode
 import telegram.ext as tg
 from telegram.error import TelegramError
 
@@ -26,7 +28,12 @@ def list_lectures(bot, update):
     # bot.send_message(chat_id=update.message.chat_id, text=str(get_lectures_XMU()))
     # Offline version
     lectures = load_lectures('./data/lectures.json')
-    bot.send_message(chat_id=update.message.chat_id, text=str(lectures))
+    lectures_md = ''
+    for l in lectures:
+        d = json.loads(l)
+        lectures_md = lectures_md + "{} {} {} \n [{}]({})\n".format(d['time'], d['loc'], d['lecturer'], d['title'], d['url'])
+    bot.send_message(chat_id=update.message.chat_id,  parse_mode=ParseMode.MARKDOWN,
+                     text=lectures_md)
     logger.debug("Start from " + str(update.message.from_user.id))
 
 
