@@ -16,14 +16,14 @@ def crawler(url):
     page = requests.get(url).content.decode('utf8')
     return page
 
-def get_lectures_XMU(url="http://chem.xmu.edu.cn/eventlist.asp"):
+def get_lectures_XMU(url="https://chem.xmu.edu.cn/xwdt/xshd.htm"):
     """
     Extract lectures from given url using re, return a set of lectures
     """
     context = crawler(url)
-    p_lec_title = re.compile("<a   title=\'(.*?)\'")
-    p_lec_url_id = re.compile("showevent.asp\?id=(\d+)")
-    p_lecturer = re.compile("报告人：(.*?)<")
+    p_lec_title = re.compile("<a title=\"(.*?)\"")
+    p_lec_url_id = re.compile("href=\"../info/(.*?).htm\"")
+    p_lecturer = re.compile("报告人：(.*?)<")   
     p_lec_time = re.compile("时间：(.*?)<")
     p_lec_loc =  re.compile("地点：(.*?)<")
 
@@ -34,6 +34,11 @@ def get_lectures_XMU(url="http://chem.xmu.edu.cn/eventlist.asp"):
     lec_locs = p_lec_loc.findall(context)
 
     if not (len(lec_titles) == len(lec_url_ids) == len(lecturers) == len(lec_times) == len(lec_locs)):
+        print("title\turl\tlecture\ttime\tloc\n{}\t{}\t{}\t{}\t{}".format(len(lec_titles), 
+                                                                          len(lec_url_ids), 
+                                                                          len(lecturers), 
+                                                                          len(lec_times), 
+                                                                          len(lec_locs)))
         raise ReError('Captured lectures does not match in dimension')
     
     lectures = set()
@@ -43,7 +48,8 @@ def get_lectures_XMU(url="http://chem.xmu.edu.cn/eventlist.asp"):
         lecture['lecturer'] = lecturers[i]
         lecture['time'] = lec_times[i]
         lecture['loc'] = lec_locs[i]
-        lecture['url'] = 'http://chem.xmu.edu.cn/showevent.asp?id='+str(lec_url_ids[i])
+        # lecture['url'] = 'http://chem.xmu.edu.cn/showevent.asp?id='+str(lec_url_ids[i])
+        lecture['url'] = 'http://chem.xmu.edu.cn/info'+str(lec_url_ids[i])+'.htm'
         lectures.add(json.dumps(lecture, sort_keys=True, ensure_ascii=False))
     
     return lectures
@@ -58,10 +64,10 @@ def save_lectures(lectures, path):
     lectures_output = []
     for lecture in list(lectures):
         lectures_output.append(json.loads(lecture))
-    lectures_output_sorted = sorted(lectures_output, reverse=True, 
-                                    key=lambda x: datetime.strptime(x['time'], '%Y-%m-%d %H:%M'))
+    # lectures_output_sorted = sorted(lectures_output, reverse=True, 
+    #                                 key=lambda x: datetime.strptime(x['time'], '%Y-%m-%d %H:%M'))
     with open(path, 'w') as fp:
-        json.dump(lectures_output_sorted, fp, sort_keys=True, ensure_ascii=False, indent=2)
+        json.dump(lectures_output, fp, sort_keys=True, ensure_ascii=False, indent=2)
 
 def load_lectures(path):
     """
