@@ -49,7 +49,7 @@ def get_lectures_XMU(url="https://chem.xmu.edu.cn/xwdt/xshd.htm"):
         lecture['time'] = lec_times[i]
         lecture['loc'] = lec_locs[i]
         # lecture['url'] = 'http://chem.xmu.edu.cn/showevent.asp?id='+str(lec_url_ids[i])
-        lecture['url'] = 'http://chem.xmu.edu.cn/info'+str(lec_url_ids[i])+'.htm'
+        lecture['url'] = 'http://chem.xmu.edu.cn/info/'+str(lec_url_ids[i])+'.htm'
         lectures.add(json.dumps(lecture, sort_keys=True, ensure_ascii=False))
     
     return lectures
