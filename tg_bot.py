@@ -6,6 +6,7 @@ import json
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
 import telegram.ext as tg
 from telegram.error import TelegramError
+from calcmass.mass import massof
 
 from crawler import get_lectures_XMU, load_lectures
 
@@ -39,6 +40,14 @@ def list_lectures(bot, update):
                         text=lectures_md)
     logger.debug("Start from " + str(update.message.from_user.id))
 
+def calcmass(bot, update, args):
+    """
+    Mass calculator.
+    Using a refined version of Calcmass (https://github.com/wsyxbcl/Calcmass)
+    """
+    text_mass = ''.join(c+': {:.2f} g/mol \n'.format(massof(c)) for c in args)
+    bot.send_message(chat_id=update.message.chat_id, text=text_mass)
+
 def inline_caps(bot, update):
     query = update.inline_query.query
     if not query:
@@ -57,5 +66,7 @@ def inline_caps(bot, update):
 updater.dispatcher.add_handler(tg.InlineQueryHandler(inline_caps))
 updater.dispatcher.add_handler(tg.CommandHandler('start', start))
 updater.dispatcher.add_handler(tg.CommandHandler('list_lectures', list_lectures))
+updater.dispatcher.add_handler(tg.CommandHandler('calcmass', calcmass, pass_args=True))
+
 updater.start_polling()
 updater.idle()
