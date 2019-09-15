@@ -35,9 +35,10 @@ def list_lectures(bot, update):
         lectures_md = ''
         for l in lectures:
             d = json.loads(l)
-            lectures_md = lectures_md + "{} {} {} \n [{}]({})\n".format(d['time'], d['loc'], d['lecturer'], d['title'], d['url'])
+            lectures_md = lectures_md + "{} {} {} \n [{}]({})\n".format(
+                d['time'], d['loc'], d['lecturer'], d['title'], d['url'])
         bot.send_message(chat_id=update.message.chat_id,  parse_mode=ParseMode.MARKDOWN,
-                        text=lectures_md)
+                         text=lectures_md, disable_web_page_preview=True)
     logger.debug("Start from " + str(update.message.from_user.id))
 
 def calcmass(bot, update, args):
