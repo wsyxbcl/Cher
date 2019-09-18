@@ -52,6 +52,7 @@ def calcmass(bot, update, args):
 
 def inline_google(bot, update):
     query = update.inline_query.query
+    username = update.inline_query.from_user.username
     if not query:
         return
     results = list()
@@ -59,7 +60,9 @@ def inline_google(bot, update):
         InlineQueryResultArticle(
             id=query.upper(),
             title='google search',
-            input_message_content=InputTextMessageContent(list(search(query, stop=1))[0])
+            input_message_content=InputTextMessageContent(username+': `google `'+
+                query+'\n'+list(search(query, stop=1))[0], 
+                parse_mode=ParseMode.MARKDOWN)
         )
     )
     bot.answer_inline_query(update.inline_query.id, results)
