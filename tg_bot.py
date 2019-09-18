@@ -7,6 +7,7 @@ from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageConten
 import telegram.ext as tg
 from telegram.error import TelegramError
 from calcmass.mass import massof
+from googlesearch import search
 
 from crawler import get_lectures_XMU, load_lectures
 
@@ -49,7 +50,7 @@ def calcmass(bot, update, args):
     text_mass = ''.join(c+': {:.2f} g/mol \n'.format(massof(c)) for c in args)
     bot.send_message(chat_id=update.message.chat_id, text=text_mass)
 
-def inline_caps(bot, update):
+def inline_google(bot, update):
     query = update.inline_query.query
     if not query:
         return
@@ -57,14 +58,14 @@ def inline_caps(bot, update):
     results.append(
         InlineQueryResultArticle(
             id=query.upper(),
-            title='Caps',
-            input_message_content=InputTextMessageContent(query.upper())
+            title='google search',
+            input_message_content=InputTextMessageContent(list(search(query, stop=1))[0])
         )
     )
     bot.answer_inline_query(update.inline_query.id, results)
 
 # Add handlers to dispatcher
-updater.dispatcher.add_handler(tg.InlineQueryHandler(inline_caps))
+updater.dispatcher.add_handler(tg.InlineQueryHandler(inline_google))
 updater.dispatcher.add_handler(tg.CommandHandler('start', start))
 updater.dispatcher.add_handler(tg.CommandHandler('list_lectures', list_lectures))
 updater.dispatcher.add_handler(tg.CommandHandler('calcmass', calcmass, pass_args=True))
