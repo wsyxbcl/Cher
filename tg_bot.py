@@ -59,8 +59,9 @@ def inline_google(bot, update):
     results = list()
     results.append(
         InlineQueryResultArticle(
-            id=query.upper(),
+            id="gsearch_cher",
             title='google search',
+            description=query, 
             input_message_content=InputTextMessageContent(username+': <code>google </code>'+
                 query+'\n'+gsearch_result, 
                 parse_mode=ParseMode.HTML)
