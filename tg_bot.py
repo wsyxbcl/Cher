@@ -75,7 +75,7 @@ def inline_google(bot, update):
         )
     )
     bot.answer_inline_query(update.inline_query.id, results)
-    logger.info("Inline query from "+str(update.message.from_user.id))
+    logger.info("Inline query from "+str(update.inline_query.from_user.id))
 
 # Add handlers to dispatcher
 updater.dispatcher.add_handler(tg.InlineQueryHandler(inline_google))
