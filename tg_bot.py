@@ -55,13 +55,14 @@ def inline_google(bot, update):
     username = update.inline_query.from_user.username
     if not query:
         return
+    gsearch_result = list(search(query, stop=1))[0]
     results = list()
     results.append(
         InlineQueryResultArticle(
             id=query.upper(),
             title='google search',
             input_message_content=InputTextMessageContent(username+': <code>google </code>'+
-                query+'\n'+list(search(query, stop=1))[0], 
+                query+'\n'+gsearch_result, 
                 parse_mode=ParseMode.HTML)
         )
     )
