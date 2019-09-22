@@ -24,7 +24,7 @@ updater = tg.Updater(token=bot_token)
 
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="REPORT SITUATION.")
-    logger.debug("Start from " + str(update.message.from_user.id))
+    logger.info("Start from " + str(update.message.from_user.id))
 
 def list_lectures(bot, update):
     lectures = get_lectures_XMU()
@@ -40,7 +40,7 @@ def list_lectures(bot, update):
                 d['time'], d['loc'], d['lecturer'], d['title'], d['url'])
         bot.send_message(chat_id=update.message.chat_id,  parse_mode=ParseMode.MARKDOWN,
                          text=lectures_md, disable_web_page_preview=True)
-    logger.debug("Start from " + str(update.message.from_user.id))
+    logger.info("Request lectures from " + str(update.message.from_user.id))
 
 def calcmass(bot, update, args):
     """
@@ -49,6 +49,7 @@ def calcmass(bot, update, args):
     """
     text_mass = ''.join(c+': {:.2f} g/mol \n'.format(massof(c)) for c in args)
     bot.send_message(chat_id=update.message.chat_id, text=text_mass)
+    logger.info("Calcmass from " + str(update.message.from_user.id))
 
 def inline_google(bot, update):
     query = update.inline_query.query
@@ -68,6 +69,7 @@ def inline_google(bot, update):
         )
     )
     bot.answer_inline_query(update.inline_query.id, results)
+    logger.info("Inline query from "+str(update.message.from_user.id))
 
 # Add handlers to dispatcher
 updater.dispatcher.add_handler(tg.InlineQueryHandler(inline_google))
