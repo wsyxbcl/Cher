@@ -1,4 +1,5 @@
 mail_list.txt
 __pycache__/*
+cher-env/*
 data/*
 config.ini
