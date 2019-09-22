@@ -48,8 +48,11 @@ def calcmass(bot, update, args):
     Using a refined version of Calcmass (https://github.com/wsyxbcl/Calcmass)
     """
     if len(args) == 1:
-        text_mass = ''.join(c+': {:.2f} g/mol \n'.format(massof(c)) for c in args)
-        update.message.reply_text(text_mass)
+        try:
+            text_mass = ''.join(c+': {:.2f} g/mol \n'.format(massof(c)) for c in args)
+            update.message.reply_text(text_mass)
+        except ValueError:
+            update.message.reply_text("Unknown element")
     else:
         update.message.reply_text("Usage: /calcmass <compound>")
     logger.info("Calcmass from " + str(update.message.from_user.id))
