@@ -47,8 +47,11 @@ def calcmass(bot, update, args):
     Mass calculator.
     Using a refined version of Calcmass (https://github.com/wsyxbcl/Calcmass)
     """
-    text_mass = ''.join(c+': {:.2f} g/mol \n'.format(massof(c)) for c in args)
-    bot.send_message(chat_id=update.message.chat_id, text=text_mass)
+    if len(args) == 1:
+        text_mass = ''.join(c+': {:.2f} g/mol \n'.format(massof(c)) for c in args)
+        update.message.reply_text(text_mass)
+    else:
+        update.message.reply_text("Usage: /calcmass <compound>")
     logger.info("Calcmass from " + str(update.message.from_user.id))
 
 def inline_google(bot, update):
