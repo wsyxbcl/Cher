@@ -60,9 +60,9 @@ def inline_google(bot, update):
         InlineQueryResultArticle(
             id=query.upper(),
             title='google search',
-            input_message_content=InputTextMessageContent(username+': `google `'+
+            input_message_content=InputTextMessageContent(username+': <code>google </code>'+
                 query+'\n'+list(search(query, stop=1))[0], 
-                parse_mode=ParseMode.MARKDOWN)
+                parse_mode=ParseMode.HTML)
         )
     )
     bot.answer_inline_query(update.inline_query.id, results)
