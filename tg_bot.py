@@ -57,6 +57,24 @@ def calcmass(bot, update, args):
         update.message.reply_text("Usage: /calcmass <compound>")
     logger.info("Calcmass from " + str(update.message.from_user.id))
 
+def calccap(bot, update, args):
+    """
+    Capacity calculator.
+    Calculate theoritical capacity of given material.
+    """
+    if len(args) == 1:
+        try:
+            mass = [massof(c) for c in args]
+            cap = [(96485 * 1000) / (3600 * m) for m in mass] # mAh/g
+            text_cap = ''.join(c+': {:.2f} mAh/g per #electron \n'.format(c for c in cap)
+            update.message.reply_text(text_cap)
+        except ValueError:
+            update.message.reply_text("Unknown element")
+    else:
+        update.message.reply_text("Usage: /calccap <compound>")
+    logger.info("Calccap from " + str(update.message.from_user.id))
+
+
 def inline_google(bot, update):
     query = update.inline_query.query
     username = update.inline_query.from_user.username
@@ -82,6 +100,7 @@ updater.dispatcher.add_handler(tg.InlineQueryHandler(inline_google))
 updater.dispatcher.add_handler(tg.CommandHandler('start', start))
 updater.dispatcher.add_handler(tg.CommandHandler('list_lectures', list_lectures))
 updater.dispatcher.add_handler(tg.CommandHandler('calcmass', calcmass, pass_args=True))
+updater.dispatcher.add_handler(tg.CommandHandler('calccap', calccap, pass_args=True))
 
 updater.start_polling()
 updater.idle()
