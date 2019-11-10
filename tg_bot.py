@@ -62,11 +62,11 @@ def calccap(bot, update, args):
     Capacity calculator.
     Calculate theoritical capacity of given material.
     """
-    if len(args) >= 1:
+    if len(args) == 1:
         try:
-            mass = [massof(c) for c in args]
-            cap = [(96485 * 1000) / (3600 * m) for m in mass] # mAh/g
-            text_cap = ''.join('{:.2f} mAh/g per #electron \n'.format(c for c in (cap)))
+            mass = massof(args[0])
+            cap = (96485 * 1000) / (3600 * mass) # mAh/g
+            text_cap = '{:.2f} mAh/g per #electron \n'.format(cap)
             update.message.reply_text(text_cap)
         except ValueError:
             update.message.reply_text("Unknown element")
