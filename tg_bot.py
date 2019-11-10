@@ -66,7 +66,7 @@ def calccap(bot, update, args):
         try:
             mass = [massof(c) for c in args]
             cap = [(96485 * 1000) / (3600 * m) for m in mass] # mAh/g
-            text_cap = ''.join(c+': {:.2f} mAh/g per #electron \n'.format(c for c in cap))
+            text_cap = ''.join(args[i]+': {:.2f} mAh/g per #electron \n'.format(c for i, c in enumerate(cap))
             update.message.reply_text(text_cap)
         except ValueError:
             update.message.reply_text("Unknown element")
