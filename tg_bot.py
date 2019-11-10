@@ -47,7 +47,7 @@ def calcmass(bot, update, args):
     Mass calculator.
     Using a refined version of Calcmass (https://github.com/wsyxbcl/Calcmass)
     """
-    if len(args) == 1:
+    if len(args) >= 1:
         try:
             text_mass = ''.join(c+': {:.2f} g/mol \n'.format(massof(c)) for c in args)
             update.message.reply_text(text_mass)
@@ -62,7 +62,7 @@ def calccap(bot, update, args):
     Capacity calculator.
     Calculate theoritical capacity of given material.
     """
-    if len(args) == 1:
+    if len(args) >= 1:
         try:
             mass = [massof(c) for c in args]
             cap = [(96485 * 1000) / (3600 * m) for m in mass] # mAh/g
