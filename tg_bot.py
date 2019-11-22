@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import datetime
 import logging
 import configparser
 import json
@@ -22,6 +23,18 @@ logger = logging.getLogger(__name__)
 
 updater = tg.Updater(token=bot_token)
 
+def gen_gcal_url(action, text, dates, ctz, details, location):
+    """
+    Generate event url for google calendar.
+    https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/master/services/google.md
+    """
+    # 'Asia/Shanghai'
+    # 'TEMPLATE'
+    base_url = "https://calendar.google.com/calendar/render"
+    gcal_url = base_url+"?action={}&text={}&dates={}&details={}&location={}&ctz={}".format(
+        action, text, dates, details, location, ctz)
+    return gcal_url
+    
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="REPORT SITUATION.")
     logger.info("Start from " + str(update.message.from_user.id))
@@ -36,8 +49,13 @@ def list_lectures(bot, update):
         lectures_md = ''
         for l in lectures:
             d = json.loads(l)
-            lectures_md = lectures_md + "{} {} {} \n [{}]({})\n".format(
-                d['time'], d['loc'], d['lecturer'], d['title'], d['url'])
+            lec_time_gcal = datetime.datetime.strptime(d['time'], 
+                '%Y-%m-%d %H:%M:%S').strftime('%Y%m%dTo%H%M%S')
+            lec_gcal = gen_gcal_url(action='TEMPLATE', text=d['title'], 
+                dates=lec_time_gcal+'/'+lec_time_gcal, ctz='Asia/Shanghai', 
+                details=d['url'], location=d['loc']) 
+            lectures_md = lectures_md + "{} {} {} \n [{}]({})\n [ADD TO GCAL]({})".format(
+                d['time'], d['loc'], d['lecturer'], d['title'], d['url'], lec_gcal)
         bot.send_message(chat_id=update.message.chat_id,  parse_mode=ParseMode.MARKDOWN,
                          text=lectures_md, disable_web_page_preview=True)
     logger.info("Request lectures from " + str(update.message.from_user.id))
