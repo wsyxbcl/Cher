@@ -50,11 +50,11 @@ def list_lectures(bot, update):
         for l in lectures:
             d = json.loads(l)
             lec_time_gcal = datetime.datetime.strptime(d['time'], 
-                '%Y-%m-%d %H:%M:%S').strftime('%Y%m%dTo%H%M%S')
+                '%Y-%m-%d %H:%M:%S').strftime('%Y%m%dT%H%M%S')
             lec_gcal = gen_gcal_url(action='TEMPLATE', text=d['title'], 
                 dates=lec_time_gcal+'/'+lec_time_gcal, ctz='Asia/Shanghai', 
                 details=d['url'], location=d['loc']) 
-            lectures_md = lectures_md + "{} {} {} \n [{}]({})\n [ADD TO GCAL]({})".format(
+            lectures_md = lectures_md + "{} {} {} \n [{}]({})\n [ADD TO GCAL]({})\n".format(
                 d['time'], d['loc'], d['lecturer'], d['title'], d['url'], lec_gcal)
         bot.send_message(chat_id=update.message.chat_id,  parse_mode=ParseMode.MARKDOWN,
                          text=lectures_md, disable_web_page_preview=True)
