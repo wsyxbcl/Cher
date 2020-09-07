@@ -5,6 +5,7 @@ import configparser
 import json
 
 from telegram import ParseMode, InlineQueryResultArticle, InputTextMessageContent
+from telegram.ext import run_async
 import telegram.ext as tg
 from telegram.error import TelegramError
 from calcmass.mass import massof
@@ -92,7 +93,7 @@ def calccap(bot, update, args):
         update.message.reply_text("Usage: /calccap <compound>")
     logger.info("Calccap from " + str(update.message.from_user.id))
 
-
+@run_async
 def inline_google(bot, update):
     query = update.inline_query.query
     username = update.inline_query.from_user.username
